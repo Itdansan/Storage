@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<h2>sessionStorage</h2>
+	<nav>
+		登陆名是:<span id="span"></span>
+	</nav>
+	数据值: <input type="text" name="dataVal" id="dataVal" value=""><br>	
+	<hr>
+	<button onclick="addVal()">添加数据</button>
+	<button onclick="getVal()">获取数据</button>
+	<button onclick="modVal()">修改数据</button>
+	<button onclick="remove()">清键值对</button>
+	<button onclick="clearVal()">清空数据</button>
+	<button onclick="AllVal()">遍历数据</button><br>
+	<hr>
+	查找和修改用: <input type="number" name="dataName" id="dataName" value=""><br>	
+
+	<script>
+/*
+	方法存储的数据没有时间限制。第二天、第二周或下一年之后，数据依然可用
+
+	sessionStorage的方法
+		1.判断window是否支持sessionStorage
+			window.sessionStorage
+		2.设置键值对
+			sessionStorage.setItem(key,val);
+		3.获取值
+			sessionStorage.getItem(key);//只能输入键，获取值
+		4.删除键值对
+			sessionStorage.clear();
+		5.获取值
+			sessionStorage.key(i)
+		6.访问页面次数
+			sessionStorage.pagecount
+*/
+		
+		var p = document.getElementById('span');
+
+		var n ;	 
+		//添加数据
+		function addVal(){
+			n = sessionStorage.length+1;
+			// 先判断window是否支持sessionStorage
+			if(window.sessionStorage){
+				var dataVal = document.getElementById('dataVal');
+				var val = dataVal.value;
+				// 判断用户是否输入为空
+				if(val != '' && val != 0){
+					var res = sessionStorage.setItem(n,val);//写入sessionStorage中，并用变量res存起来
+					p.innerHTML = dataVal.value;
+					dataVal.value = '';
+				}else{
+					alert('值不能为空或为0');
+				}
+			}
+		}
+
+		//获取数据
+		function getVal(){
+			if(window.sessionStorage){
+				var dataName = document.getElementById('dataName');
+				var dataVal = document.getElementById('dataVal');
+				var name = dataName.value;
+				if(name != '' && name > 0 && name <= sessionStorage.length){
+					var val = sessionStorage.getItem(name);
+					dataVal.value = val;
+				}else if(sessionStorage.length == 0){
+					alert('赞无数据可获取');
+				}else{
+					alert('超出范围了,目前数据长度为1 ~ '+sessionStorage.length);
+				}
+
+			}
+		}
+
+		//修改数据
+		function modVal(){
+			if(window.sessionStorage){
+				var dataName = document.getElementById('dataName');
+				var dataVal = document.getElementById('dataVal');
+				var name = dataName.value;
+				var val = dataVal.value;
+				if(name<= sessionStorage.length && name>0){
+					sessionStorage.setItem(name,val);
+					dataVal.value = '';
+				}else if(sessionStorage.length == 0){
+					alert('暂无数据可修改');
+				}else{
+					alert('超出范围了,目前数据长度为1 ~ '+sessionStorage.length);
+				}
+			}
+		}
+
+		// 单独删除某个键值对
+		var arr = [];
+		function remove(){
+			if(window.sessionStorage){			
+				var dataName = document.getElementById('dataName');
+				var name = dataName.value;
+				if(name<= sessionStorage.length && name > 0){
+					sessionStorage.removeItem(name);
+					for(var j=0;j<sessionStorage.length;j++){
+						var name = sessionStorage.key(j);
+						var val = sessionStorage.getItem(name);
+						arr[j] = val;
+					}
+					callback();
+					aa();
+				}else if(sessionStorage.length == 0){
+						alert('暂无数据可删除');
+				}else{	
+					alert('超出范围了,目前数据长度为1 ~ '+sessionStorage.length);
+				}
+			}
+		}
+		function callback(){
+			sessionStorage.clear();
+			for(var i = 0;i<arr.length;i++){
+				sessionStorage.setItem(i+1,arr[i]);
+			}
+			arr = [];
+
+		}
+
+
+
+		// 清空数据
+		function clearVal(){
+			if(window.sessionStorage){
+				if(sessionStorage.length == 0){
+					return ;
+				}
+				var dataVal = document.getElementById('dataVal');
+				sessionStorage.clear();
+				dataVal.value = '';
+				p.innerHTML = '';
+				aa();
+
+			}
+		}
+
+		//遍历数据
+		function AllVal(){
+			if(window.sessionStorage){
+				if(sessionStorage.length == 0){
+					alert("暂时没有数据可以读取的")
+					return;
+				}
+					for(var i=0;i<sessionStorage.length;i++){
+						var name = sessionStorage.key(i);
+						var val = sessionStorage.getItem(name);
+						alert(val);
+					}
+				}
+				
+			
+		}
+		// 更新页面上显示的值
+		function aa(){
+			if(window.sessionStorage){	
+					var long = sessionStorage.length;
+
+				if(long > 0){
+					console.log(long);
+					for(var i = 0;i<long;i++){
+						var name = sessionStorage.key(long-1);
+						var val = sessionStorage.getItem(name);
+						p.innerHTML = val;
+					}
+				}
+			}
+		}
+		aa();
+
+
+	</script>
+</body>
+</html>
